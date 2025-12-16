@@ -10,7 +10,7 @@ export default function NewTaskView({ data, dispatch }) {
                 key={item._id}
                 onClick={async (e) => {
                   await fetch(
-                    `https://todoapp-bankend.onrender.com/Update/${item._id}`,
+                    "https://todoapp-bankend.onrender.com/Update/" + item._id,
                     {
                       method: "post",
                       headers: { "Content-Type": "application/json" },
