@@ -19,7 +19,7 @@ export default function NewTaskView({ data, dispatch }) {
                   );
 
                   const res1 = await fetch(
-                    "https:/todoapp-bankend.onrender.com/Home"
+                    "https://todoapp-bankend.onrender.com/Home"
                   );
                   const allTasks = await res1.json();
                   dispatch({ type: "SET_DATA", data: allTasks });
