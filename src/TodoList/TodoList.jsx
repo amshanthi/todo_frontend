@@ -43,17 +43,17 @@ export default function TodoList({ data }) {
   const [text, setText] = useState("");
   const postTaskHandler = async (e) => {
     e.preventDefault();
-
+    //https:/todoapp-bankend.onrender.com
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     setText("");
     if (data.name !== "") {
-      const res = await fetch("http://localhost:5000/Add", {
+      const res = await fetch("https:/todoapp-bankend.onrender.com/Add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      const res1 = await fetch("http://localhost:5000/Home");
+      const res1 = await fetch("https:/todoapp-bankend.onrender.com/Home");
       const allTasks = await res1.json();
       dispatch({ type: "SET_DATA", data: allTasks });
     } else {

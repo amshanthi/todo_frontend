@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("http://localhost:5000/Home");
+      const res = await fetch("https:/todoapp-bankend.onrender.com/Home");
       const result = await res.json();
       setData(result);
     };

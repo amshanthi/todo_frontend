@@ -9,13 +9,18 @@ export default function NewTaskView({ data, dispatch }) {
                 className=" flex justify-between "
                 key={item._id}
                 onClick={async (e) => {
-                  await fetch(`http://localhost:5000/Update/${item._id}`, {
-                    method: "post",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ Completed: !item.Completed }),
-                  });
+                  await fetch(
+                    `https:/todoapp-bankend.onrender.com/Update/${item._id}`,
+                    {
+                      method: "post",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ Completed: !item.Completed }),
+                    }
+                  );
 
-                  const res1 = await fetch("http://localhost:5000/Home");
+                  const res1 = await fetch(
+                    "https:/todoapp-bankend.onrender.com/Home"
+                  );
                   const allTasks = await res1.json();
                   dispatch({ type: "SET_DATA", data: allTasks });
                 }}
