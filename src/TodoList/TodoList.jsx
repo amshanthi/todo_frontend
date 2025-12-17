@@ -3,13 +3,15 @@ import Button from "../ResueButton/Button";
 import NewTaskView from "./NewTaskView";
 
 function reducer(state, action) {
-  // console.log(state);
   switch (action.type) {
     case "SET_DATA":
       return { ...state, data: action.data };
+
+    case "SET_FILTER":
+      return { ...state, filterType: action.filterType };
     case "completed":
       return { ...state, filterType: "completed" };
-    case "All":
+    case "all":
       return { ...state, filterType: "all" };
     case "pending":
       return { ...state, filterType: "pending" };
@@ -23,7 +25,7 @@ export default function TodoList({ data }) {
 
   const [state, dispatch] = useReducer(reducer, {
     data: [],
-    filterType: "All",
+    filterType: "all",
   });
 
   const filterData = state.data.filter((item) => {
@@ -48,6 +50,10 @@ export default function TodoList({ data }) {
     const data = Object.fromEntries(formData.entries());
     setText("");
     if (data.name !== "") {
+      let userData = data.name.split("");
+      const firstLetter = userData[0].toUpperCase();
+      userData[0] = firstLetter;
+      data.name = `${userData.join("")}`;
       const res = await fetch("https://todoapp-bankend.onrender.com/Add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,6 +62,8 @@ export default function TodoList({ data }) {
       const res1 = await fetch("https://todoapp-bankend.onrender.com/Home");
       const allTasks = await res1.json();
       dispatch({ type: "SET_DATA", data: allTasks });
+
+      dispatch({ type: "SET_FILTER", filterType: "all" });
     } else {
       alert("invalid...");
     }
@@ -66,7 +74,8 @@ export default function TodoList({ data }) {
   };
   return (
     <div>
-      <div className=" w-full h-screen bg-gray-50 p-4 m-2 shadow-md">
+      <h1 className="flex justify-center text-3xl ">To Do App</h1>
+      <div className="w-full h-screen bg-gray-50 p-4 m-2 shadow-md">
         <form
           onSubmit={postTaskHandler}
           className="flex justify-center items-center m-4 "
@@ -87,12 +96,18 @@ export default function TodoList({ data }) {
             label="Add Task"
           />
         </form>
-        <div>
+        <div className="flex flex-row justify-center ">
           <button
             onClick={() => {
-              dispatch({ type: "All" });
+              dispatch({ type: "all" });
             }}
-            className="cursor-pointer outline-1 rounded p-2 m-2 "
+            className={`outline-1 rounded p-2 m-2
+               ${
+                 state.filterType !== "all"
+                   ? "cursor-pointer opacity-100"
+                   : "cursor-not-allowed opacity-50 "
+               }`}
+            disabled={state.filterType !== "all" ? false : true}
           >
             All Task
           </button>
@@ -100,7 +115,13 @@ export default function TodoList({ data }) {
             onClick={() => {
               dispatch({ type: "pending" });
             }}
-            className="cursor-pointer outline-1 rounded p-2 m-2 "
+            className={`outline-1 rounded p-2 m-2
+               ${
+                 state.filterType !== "pending"
+                   ? "cursor-pointer opacity-100"
+                   : "cursor-not-allowed opacity-50"
+               }`}
+            disabled={state.filterType !== "pending" ? false : true}
           >
             Pending
           </button>
@@ -108,13 +129,23 @@ export default function TodoList({ data }) {
             onClick={() => {
               dispatch({ type: "completed" });
             }}
-            className="cursor-pointer outline-1 rounded p-2 m-2 "
+            className={`outline-1 rounded p-2 m-2
+               ${
+                 state.filterType !== "completed"
+                   ? "cursor-pointer opacity-100 border-amber-500"
+                   : "cursor-not-allowed opacity-50"
+               }`}
+            disabled={state.filterType !== "completed" ? false : true}
           >
             Completed
           </button>
         </div>
-        <div className="flex justify-start">
-          <NewTaskView data={filterData} dispatch={dispatch} />
+        <div className="flex flex-row justify-center ">
+          <NewTaskView
+            data={filterData}
+            dispatch={dispatch}
+            status={state.filterType}
+          />
         </div>
       </div>
     </div>
